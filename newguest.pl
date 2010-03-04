@@ -50,7 +50,7 @@ while(1)
 
 #Read image directory
 print "\nReading contents of the image directory: \n";
-opendir(my $dirhandle, $imagedir) || die "Can't open directory";
+opendir(my $dirhandle, $imagedir) || die "Can't open directory: " . $!;
 
 # do not read . or ..
 my @dircontents = grep(/^.+\..+$/, readdir($dirhandle));
@@ -105,18 +105,18 @@ my $gw = "192.168.1.1";
 
 #Make a new domain folder and copy over image
 print "\nCreating new domain folder.\n";
-mkdir $xendir . $hostname || die "Couldn't create new domain folder";
+mkdir $xendir . $hostname || die "Couldn't create new domain folder: " . $!;
 
 my $fromdir = $imagedir . $dircontents[$imageselection - 1];
 my $todir = $xendir . $hostname . "/disk.img";
 print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
 
-copy($fromdir, $todir) || die "Couldn't copy image file.";
+copy($fromdir, $todir) || die "Couldn't copy image file: " . $!;
 
 # -- image customization stage -------------------------------------------------
 mkdir $tmpdir;
 system("mount -t ext3 -o loop " . $todir . " " . $tmpdir) == 0 
-		|| die "Couldn't mount image file.";
+		|| die "Couldn't mount image file: " . $!;
 
 my $interfaces = $tmpdir . "etc/network/interfaces";
 # autoconf network
@@ -124,8 +124,8 @@ if(-e $interfaces)
 {
 	unlink($interfaces);
 }
-open(my $inthandle, ">>" . $tmpdir . "etc/network/interfaces")
-		|| die "Couldn't open interfaces file";
+open(my $inthandle, ">>" . $interfaces)
+		|| die "Couldn't open interfaces file: " . $!;
 my @intcontents = (
 	"auto lo",
 	"iface lo inet loopback",
@@ -142,6 +142,18 @@ foreach(@intcontents)
 {
 	print $inthandle $_ . "\n";
 }
+close($inthandle);
 
+# overwrite hostname file
+my $hostfile = $tmpdir . "etc/hostname";
+if(-e $hostfile)
+{
+	unlink($hostfile);
+}
+open(my $hosthandle, ">>" . $hostfile)
+		|| die "Couldn't open hostnames file: " . $!;
+print $hosthandle $hostname;
+close($hosthandle);
 
+system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
 
