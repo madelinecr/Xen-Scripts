@@ -9,6 +9,26 @@ my $imagedir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/images/"
 my $xendir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/domains/";
 my $tmpdir = "/tmp/newguest";
 
+sub getIPAddr
+{
+	my $ipaddr;
+	while(1)
+	{
+		print "Enter value: ";
+		$ipaddr = <>;
+		if($ipaddr =~ /\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
+		{
+			return $ipaddr;
+			last;
+		}
+		else
+		{
+			print "Not a properly formatted IP address.\n";
+		}
+	}
+}
+
+# PROGRAM START
 
 # Get a hostname
 my $hostname;
@@ -57,6 +77,18 @@ while(1)
 		print "Sorry, not a number.";
 	}
 }
+
+#Get network configuration
+my $ipaddr;
+my $netmask;
+print "Configure IP Address. ";
+$ipaddr = &getIPAddr;
+print $ipaddr;
+print "Configure netmask. ";
+$netmask = &getIPAddr;
+print $netmask;
+
+die;
 
 #Make a new domain folder and copy over image
 print "\nCreating new domain folder.\n";
