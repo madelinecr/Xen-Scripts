@@ -7,7 +7,12 @@ use File::Copy;
 # Global variables
 my $imagedir = "/home/sensae/Documents/Perl/vserver/images/";
 my $xendir = "/home/sensae/Documents/Perl/vserver/domains/";
+my $xenconfdir = "/home/sensae/Documents/Perl/vserver/xenconf/";
 my $tmpdir = "/tmp/newguest/";
+
+my $xenkernel = "/boot/vmlinuz-2.6.26-1-xen-686";
+my $ramdisk = "/boot/initrd.img-2.6.26-1-xen-686";
+my $rootdevice = "/dev/hda2 ro";
 
 sub getIPAddr
 {
@@ -157,3 +162,31 @@ close($hosthandle);
 
 system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
 
+# -- conf file writing ---------------------------------------------------------
+my @xenconf = (
+	"kernel = \'" . $xenkernel . "\'",
+	"ramdisk = \'" . $ramdisk . "\'",
+	"memory = \'128\'",
+	" ",
+	"root = \'" . $rootdevice . "\'",
+	"disk = [",
+	"\t\'file:" . $todir . ",hda1,w\',",
+	"\t]",
+	" ",
+	"name = \'" . $hostname . "\'",
+	" ",
+	"vif = [ \'ip=\"" . $ipaddr . "\"\' ]",
+	" ",
+	"on_poweroff = \'destroy\'",
+	"on_reboot = \'restart\'",
+	"on_crash = \'restart\'"
+	);
+
+print $xenconfdir . $hostname . ".cfg\n";
+open(my $xenconfhandle, ">>" . $xenconfdir . $hostname . ".cfg")
+		|| die "Couldn't open xen config file: " . $!;
+foreach(@xenconf)
+{
+	print $xenconfhandle $_ . "\n";
+} 
+close($xenconfhandle);
