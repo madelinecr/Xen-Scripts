@@ -5,9 +5,9 @@ use warnings;
 use File::Copy;
 
 # Global variables
-my $imagedir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/images/";
-my $xendir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/domains/";
-my $tmpdir = "/tmp/newguest";
+my $imagedir = "/home/sensae/Documents/Perl/vserver/images/";
+my $xendir = "/home/sensae/Documents/Perl/vserver/domains/";
+my $tmpdir = "/tmp/newguest/";
 
 sub getIPAddr
 {
@@ -30,6 +30,7 @@ sub getIPAddr
 
 # PROGRAM START
 
+# -- Data gathering stage ------------------------------------------------------
 # Get a hostname
 my $hostname;
 while(1)
@@ -79,16 +80,28 @@ while(1)
 }
 
 #Get network configuration
-my $ipaddr;
-my $netmask;
-print "Configure IP Address. ";
-$ipaddr = &getIPAddr;
-print $ipaddr;
-print "Configure netmask. ";
-$netmask = &getIPAddr;
-print $netmask;
+my $ipaddr = "192.168.1.50";
+my $netmask = "255.255.255.0";
+my $dns = "192.168.1.1";
+my $gw = "192.168.1.1";
 
-die;
+#print "Configure IP address. ";
+#$ipaddr = &getIPAddr;
+#print $ipaddr;
+
+#print "Configure netmask. ";
+#$netmask = &getIPAddr;
+#print $netmask;
+
+#print "Configure nameserver address. ";
+#$dns = &getIPAddr;
+#print $dns;
+
+#print "Configure gateway address. ";
+#$gw = &getIPAddr;
+#print $gw;
+
+# -- domain filesystem setup stage ---------------------------------------------
 
 #Make a new domain folder and copy over image
 print "\nCreating new domain folder.\n";
@@ -100,10 +113,35 @@ print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
 
 copy($fromdir, $todir) || die "Couldn't copy image file.";
 
-#image customization stage
+# -- image customization stage -------------------------------------------------
 mkdir $tmpdir;
 system("mount -t ext3 -o loop " . $todir . " " . $tmpdir) == 0 
 		|| die "Couldn't mount image file.";
+
+my $interfaces = $tmpdir . "etc/network/interfaces";
+# autoconf network
+if(-e $interfaces)
+{
+	unlink($interfaces);
+}
+open(my $inthandle, ">>" . $tmpdir . "etc/network/interfaces")
+		|| die "Couldn't open interfaces file";
+my @intcontents = (
+	"auto lo",
+	"iface lo inet loopback",
+	" ",
+	"allow-hotplug eth0",
+	"iface eth0 inet static",
+	"\taddress " . $ipaddr,
+	"\tnetmask " . $netmask,
+	"\tgateway " . $gw,
+	"\tdns-nameservers " . $dns
+	);
+	
+foreach(@intcontents)
+{
+	print $inthandle $_ . "\n";
+}
 
 
 
