@@ -5,8 +5,9 @@ use warnings;
 use File::Copy;
 
 # Global variables
-my $imagedir = "/Users/Sensae/Desktop/vserver/images/";
-my $xendir = "/Users/Sensae/Desktop/vserver/domains/";
+my $imagedir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/images/";
+my $xendir = "/home/sensae/Dropbox/Documents/Programming/Perl/vserver/domains/";
+my $tmpdir = "/tmp/newguest";
 
 
 # Get a hostname
@@ -59,10 +60,18 @@ while(1)
 
 #Make a new domain folder and copy over image
 print "\nCreating new domain folder.\n";
-mkdir $xendir . $hostname || die "Can't create new domain folder";
+mkdir $xendir . $hostname || die "Couldn't create new domain folder";
 
 my $fromdir = $imagedir . $dircontents[$imageselection - 1];
 my $todir = $xendir . $hostname . "/disk.img";
 print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
 
 copy($fromdir, $todir) || die "Couldn't copy image file.";
+
+#image customization stage
+mkdir $tmpdir;
+system("mount -t ext3 -o loop " . $todir . " " . $tmpdir) == 0 
+		|| die "Couldn't mount image file.";
+
+
+
