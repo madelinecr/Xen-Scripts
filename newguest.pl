@@ -160,7 +160,21 @@ open(my $hosthandle, ">>" . $hostfile)
 print $hosthandle $hostname;
 close($hosthandle);
 
+# overwtie fstab file
+my $fstabcontents = "/dev/hda1\t/\text4\tdefaults\t0\t1";
+my $fstabfile = $tmpdir . "etc/fstab";
+if(-e $fstabfile)
+{
+	unlink($fstabfile)
+}
+open(my $fstabhandle, ">>" . $fstabfile)
+		|| die "Couldn't open fstab file: " . $!;
+print $fstabhandle $fstabcontents;
+close($fstabhandle);
+
+
 system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
+
 
 # -- conf file writing ---------------------------------------------------------
 my @xenconf = (
