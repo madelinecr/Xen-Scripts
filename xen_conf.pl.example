@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# Global variables
+# Rename me to xen_conf.pl before running script!
+$imagedir = "/home/sensae/Documents/Perl/vserver/images/";
+$xendir = "/home/sensae/Documents/Perl/vserver/domains/";
+$xenconfdir = "/home/sensae/Documents/Perl/vserver/xenconf/";
+$tmpdir = "/tmp/newguest/";
+
+$xenkernel = "/boot/vmlinuz-2.6.26-1-xen-686";
+$ramdisk = "/boot/initrd.img-2.6.26-1-xen-686";
+$rootdevice = "/dev/hda2 ro";
