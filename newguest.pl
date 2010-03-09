@@ -58,7 +58,7 @@ print "\nReading contents of the image directory: \n";
 opendir(my $dirhandle, $imagedir) || die "Can't open directory: " . $!;
 
 # do not read . or ..
-my @dircontents = grep(/^.+\..+$/, readdir($dirhandle));
+my @dircontents = grep(!/^\.+$/, readdir($dirhandle));
 
 my $count = 1;
 foreach(@dircontents)
@@ -67,20 +67,22 @@ foreach(@dircontents)
 	$count++;
 }
 
+my $dircount = @dircontents;
+
 #Get which image is wanted
 my $imageselection;
 while(1)
 {	
 	print "\nPlease make a selection for your new VM: ";
 	$imageselection = <>;
-	if($imageselection =~ /^[0-9]+$/)
+	if($imageselection =~ /^[0-9]+$/ && $imageselection <= $dircount)
 	{
 		chop $imageselection;
 		last;
 	}
 	else
 	{
-		print "Sorry, not a number.";
+		print "Sorry, not a number or out of range.";
 	}
 }
 
