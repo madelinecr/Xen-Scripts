@@ -4,15 +4,16 @@ use warnings;
 
 use File::Copy;
 
-# Global variables
-my $imagedir = "/home/sensae/Documents/Perl/vserver/images/";
-my $xendir = "/home/sensae/Documents/Perl/vserver/domains/";
-my $xenconfdir = "/home/sensae/Documents/Perl/vserver/xenconf/";
-my $tmpdir = "/tmp/newguest/";
+our $imagedir;
+our $xendir;
+our $xenconfdir;
+our $tmpdir;
 
-my $xenkernel = "/boot/vmlinuz-2.6.26-1-xen-686";
-my $ramdisk = "/boot/initrd.img-2.6.26-1-xen-686";
-my $rootdevice = "/dev/hda2 ro";
+our $xenkernel;
+our $ramdisk;
+our $rootdevice;
+
+do "xen_conf.pl";
 
 sub getIPAddr
 {
