@@ -16,6 +16,9 @@ do "xen_conf.pl";
 
 opendir(my $dirhandle, $xendir) || die "Couldn't open domain dir: " . $!;
 
+print "Please make sure you have stopped all xen guests you wish to delete " . 
+		"before continuing\n\n";
+
 my @dircontents = grep(!/^\.+$/, readdir($dirhandle));
 
 my $count = 1;
