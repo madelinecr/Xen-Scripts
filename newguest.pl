@@ -188,7 +188,7 @@ my @xenconf = (
 	"ramdisk = \'" . $ramdisk . "\'",
 	"memory = \'128\'",
 	" ",
-	"root = \'" . $rootdevice . "\'",
+	"root = \'/dev/hda1\'",
 	"disk = [",
 	"\t\'file:" . $todir . ",hda1,w\',",
 	"\t]",
