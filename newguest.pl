@@ -163,8 +163,7 @@ close($hosthandle);
 
 # overwtie fstab file
 my @fstabcontents = (
-	"/dev/hda1\t/\text3\tdefaults\t0\t1",
-	" "
+	"/dev/hda1\t/\text3\tdefaults\t0\t1"
 	);
 my $fstabfile = $tmpdir . "etc/fstab";
 if(-e $fstabfile)
