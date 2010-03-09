@@ -1,6 +1,7 @@
-This is a perl script to aid in domain creation in xen.
+These are perl scripts to aid in domain creation in xen.
 
-It currently assumes that you have pre-made template image files in a folder, and 
-that you will use the loopback image method for the guests.
+It currently assumes that you have pre-made template image files in a folder,
+ and that you will use the loopback image method for the guests.
 
-Rename xen_conf.pl.example to xen_conf.pl and fill out all variables before executing script.
+Rename xen_conf.pl.example to xen_conf.pl and fill out all variables before 
+executing any scripts.
