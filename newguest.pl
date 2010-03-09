@@ -11,7 +11,6 @@ our $tmpdir;
 
 our $xenkernel;
 our $ramdisk;
-our $rootdevice;
 
 do "xen_conf.pl";
 
