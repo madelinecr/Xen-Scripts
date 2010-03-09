@@ -161,7 +161,10 @@ print $hosthandle $hostname;
 close($hosthandle);
 
 # overwtie fstab file
-my $fstabcontents = "/dev/hda1\t/\text4\tdefaults\t0\t1";
+my @fstabcontents = (
+	"/dev/hda1\t/\text3\tdefaults\t0\t1",
+	" "
+	);
 my $fstabfile = $tmpdir . "etc/fstab";
 if(-e $fstabfile)
 {
@@ -169,9 +172,11 @@ if(-e $fstabfile)
 }
 open(my $fstabhandle, ">>" . $fstabfile)
 		|| die "Couldn't open fstab file: " . $!;
-print $fstabhandle $fstabcontents;
+foreach(@fstabcontents)
+{
+	print $fstabhandle $_ . "\n";
+}
 close($fstabhandle);
-
 
 system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
 
