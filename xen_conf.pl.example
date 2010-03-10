@@ -8,3 +8,4 @@ $tmpdir = "/tmp/newguest/";
 
 $xenkernel = "/boot/vmlinuz-2.6.26-1-xen-686";
 $ramdisk = "/boot/initrd.img-2.6.26-1-xen-686";
+$swapimage = "/home/sensae/Documents/Perl/vserver/swap.img";

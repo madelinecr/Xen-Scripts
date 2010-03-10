@@ -11,6 +11,7 @@ our $tmpdir;
 
 our $xenkernel;
 our $ramdisk;
+our $swapimage;
 
 do "xen_conf.pl";
 
@@ -116,9 +117,13 @@ mkdir $xendir . $hostname || die "Couldn't create new domain folder: " . $!;
 
 my $fromdir = $imagedir . $dircontents[$imageselection - 1];
 my $todir = $xendir . $hostname . "/disk.img";
-print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
+my $toimgdir = $xendir . $hostname . "/swap.img";
 
+print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
 copy($fromdir, $todir) || die "Couldn't copy image file: " . $!;
+
+print "Copying swap image from:\n", $imagedir . "\nTo:\n", $todir . "\n";
+copy($swapimage, $toimgdir) || die "Couldn't copy swap image file: " . $!;
 
 # -- image customization stage -------------------------------------------------
 mkdir $tmpdir;
@@ -162,9 +167,10 @@ open(my $hosthandle, ">>" . $hostfile)
 print $hosthandle $hostname;
 close($hosthandle);
 
-# overwtie fstab file
+# overwrite fstab file
 my @fstabcontents = (
-	"/dev/hda1\t/\text3\tdefaults\t0\t1"
+	"/dev/hda1\t/\text3\tdefaults\t0\t1",
+	"/dev/hda2\tnone\tswap\tsw\t0\t0"
 	);
 my $fstabfile = $tmpdir . "etc/fstab";
 if(-e $fstabfile)
@@ -191,6 +197,7 @@ my @xenconf = (
 	"root = \'/dev/hda1\'",
 	"disk = [",
 	"\t\'file:" . $todir . ",hda1,w\',",
+	"\t\'file:" . $toimgdir . ",hda2,w\',",
 	"\t]",
 	" ",
 	"name = \'" . $hostname . "\'",
