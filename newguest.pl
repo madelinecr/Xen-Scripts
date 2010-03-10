@@ -93,20 +93,20 @@ my $netmask = "255.255.255.0";
 my $dns = "192.168.1.1";
 my $gw = "192.168.1.1";
 
-#print "Configure IP address. ";
-#$ipaddr = &getIPAddr;
+print "Configure IP address. ";
+$ipaddr = &getIPAddr;
 #print $ipaddr;
 
-#print "Configure netmask. ";
-#$netmask = &getIPAddr;
+print "Configure netmask. ";
+$netmask = &getIPAddr;
 #print $netmask;
 
-#print "Configure nameserver address. ";
-#$dns = &getIPAddr;
+print "Configure nameserver address. ";
+$dns = &getIPAddr;
 #print $dns;
 
-#print "Configure gateway address. ";
-#$gw = &getIPAddr;
+print "Configure gateway address. ";
+$gw = &getIPAddr;
 #print $gw;
 
 # -- domain filesystem setup stage ---------------------------------------------
@@ -122,7 +122,7 @@ my $toimgdir = $xendir . $hostname . "/swap.img";
 print "Copying from:\n", $fromdir . "\nTo:\n", $todir . "\n";
 copy($fromdir, $todir) || die "Couldn't copy image file: " . $!;
 
-print "Copying swap image from:\n", $imagedir . "\nTo:\n", $todir . "\n";
+print "Copying swap image from:\n", $swapimage . "\nTo:\n", $todir . "\n";
 copy($swapimage, $toimgdir) || die "Couldn't copy swap image file: " . $!;
 
 # -- image customization stage -------------------------------------------------
