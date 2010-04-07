@@ -195,7 +195,7 @@ if(-e $resolvfile)
 open(my $resolvhandle, ">>" . $resolvfile)
 		|| die "Couldn't open resolv.conf file: " . $!;
 print $resolvhandle "nameserver " . $dns . "\n";
-close($resolvhadle);
+close($resolvhandle);
 
 system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
 
