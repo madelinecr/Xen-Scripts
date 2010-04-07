@@ -176,7 +176,7 @@ my @fstabcontents = (
 my $fstabfile = $tmpdir . "etc/fstab";
 if(-e $fstabfile)
 {
-	unlink($fstabfile)
+	unlink($fstabfile);
 }
 open(my $fstabhandle, ">>" . $fstabfile)
 		|| die "Couldn't open fstab file: " . $!;
@@ -185,6 +185,17 @@ foreach(@fstabcontents)
 	print $fstabhandle $_ . "\n";
 }
 close($fstabhandle);
+
+# overwrite resolv.conf file
+my $resolvfile = $tmpdir . "etc/resolv.conf";
+if(-e $resolvfile)
+{
+	unlink($resolvfile);
+}
+open(my $resolvhandle, ">>" . $resolvfile)
+		|| die "Couldn't open resolv.conf file: " . $!;
+print $resolvhandle "nameserver " . $dns . "\n";
+close($resolvhadle);
 
 system("umount " . $tmpdir) == 0 || die "Couldn't unmount image: " . $!;
 
